@@ -1,0 +1,18 @@
+oscar-ai-deepfake-detector/
+│
+├── backend/
+│   ├── app.py                    # Flask/FastAPI main application
+│   ├── deepfake_detector.py      # ML model for deepfake detection
+│   ├── nlp_processor.py          # NLP/LLM integration
+│   ├── utils.py                  # Utility functions
+│   ├── models.py                 # Database models
+│   ├── requirements.txt          # Python dependencies
+│   └── uploads/                  # Uploaded files storage
+│
+├── frontend/
+│   ├── index.html                # Main HTML file
+│   ├── styles.css               # CSS styles
+│   ├── app.js                   # Main JavaScript
+│   └── assets/                  # Images, icons, etc.
+│
+└── README.md                    # Project documentation
