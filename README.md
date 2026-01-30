@@ -33,7 +33,7 @@ Set up OpenAI API key:
 On Windows: set OPENAI_API_KEY=your-api-key-here
 
 # Run the backend server:
-```python app.py
+ python app.py
 Server will start at: http://localhost:5000
 
 
