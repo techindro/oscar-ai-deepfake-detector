@@ -1,0 +1,1985 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSCAR AI - Advanced Deepfake Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1a73e8;
+            --dark-blue: #0d47a1;
+            --light-blue: #e8f0fe;
+            --accent-orange: #ff9800;
+            --accent-green: #4caf50;
+            --accent-red: #f44336;
+            --accent-purple: #9c27b0;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #5f6368;
+            --light-gray: #f8f9fa;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, #1a73e8, #0d47a1);
+            --gradient-success: linear-gradient(135deg, #4caf50, #2e7d32);
+            --gradient-warning: linear-gradient(135deg, #ff9800, #f57c00);
+            --gradient-danger: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-gray);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+        }
+
+        .logo i {
+            font-size: 32px;
+            color: white;
+            z-index: 2;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--medium-gray);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--light-blue);
+            border-radius: var(--border-radius);
+            min-width: 80px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .section-title i {
+            color: var(--primary-blue);
+            font-size: 20px;
+        }
+
+        .section-title h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 3px dashed var(--primary-blue);
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            background: var(--light-blue);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            background: rgba(26, 115, 232, 0.05);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .upload-area.dragover {
+            background: rgba(26, 115, 232, 0.1);
+            border-color: var(--accent-green);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        .upload-text h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--dark-gray);
+        }
+
+        .upload-text p {
+            color: var(--medium-gray);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* File Info */
+        .file-info-card {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: none;
+        }
+
+        .file-info-card.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--dark-gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+
+        .file-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--medium-gray);
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--medium-gray);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        /* Analysis Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .option-card.active {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            box-shadow: var(--shadow);
+        }
+
+        .option-icon {
+            font-size: 24px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .option-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: var(--medium-gray);
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Analyze Button */
+        .analyze-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 115, 232, 0.3);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Main Chat Area */
+        .chat-area {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 75vh;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+
+        .chat-header-icon {
+            font-size: 32px;
+            z-index: 2;
+        }
+
+        .chat-header-text {
+            z-index: 2;
+        }
+
+        .chat-header-text h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .chat-header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chat-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #fafafa;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 20px;
+            border-radius: 18px;
+            line-height: 1.6;
+            animation: messageAppear 0.3s ease;
+            position: relative;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: white;
+            border-bottom-left-radius: 5px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--gradient-primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.2);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .message-header i {
+            font-size: 16px;
+        }
+
+        .message-header strong {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message-content {
+            font-size: 15px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        /* Analysis Results */
+        .analysis-result {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary-blue);
+            box-shadow: var(--shadow);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .confidence-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .confidence-high {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(46, 125, 50, 0.1));
+            color: var(--accent-green);
+        }
+
+        .confidence-medium {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(245, 124, 0, 0.1));
+            color: var(--accent-orange);
+        }
+
+        .confidence-low {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.15), rgba(211, 47, 47, 0.1));
+            color: var(--accent-red);
+        }
+
+        .result-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid #e0e0e0;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-blue);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--medium-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .findings-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .findings-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .finding-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .finding-item i {
+            color: var(--accent-orange);
+        }
+
+        .visualization-area {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .viz-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-gray);
+        }
+
+        .viz-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #e0e0e0 25%, transparent 25%, transparent 50%, #e0e0e0 50%, #e0e0e0 75%, transparent 75%, transparent);
+            background-size: 20px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--medium-gray);
+            font-size: 14px;
+        }
+
+        /* Right Sidebar - History */
+        .history-sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .history-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .history-item:hover {
+            background: var(--light-blue);
+            transform: translateX(5px);
+            border-left-color: var(--primary-blue);
+        }
+
+        .history-item.active {
+            background: var(--light-blue);
+            border-left-color: var(--primary-blue);
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: var(--medium-gray);
+            margin-bottom: 5px;
+        }
+
+        .history-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-confidence {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .history-preview {
+            font-size: 12px;
+            color: var(--medium-gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background: white;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .chat-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: var(--transition);
+            resize: none;
+            max-height: 120px;
+            min-height: 60px;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .send-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            color: var(--medium-gray);
+            font-size: 14px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: var(--medium-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-100px, -100px) rotate(360deg); }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar, .history-sidebar {
+                position: static;
+            }
+            
+            .chat-area {
+                height: 60vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-stats {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --dark-gray: #f8f9fa;
+                --light-gray: #2d3748;
+                --medium-gray: #a0aec0;
+                --light-blue: #2d3748;
+            }
+            
+            body {
+                background: #1a202c;
+            }
+            
+            .sidebar, .chat-area, .history-sidebar, footer {
+                background: #2d3748;
+            }
+            
+            .message.ai {
+                background: #4a5568;
+                color: white;
+            }
+            
+            .metric-card, .findings-list {
+                background: #4a5568;
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-dog"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>OSCAR AI</h1>
+                    <p>Advanced Deepfake Detection System</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="analysesCount">0</div>
+                    <div class="stat-label">Analyses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="detectionRate">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="responseTime">0ms</div>
+                    <div class="stat-label">Response</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fas fa-upload"></i>
+                        <h3>Upload Media</h3>
+                    </div>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <h4>Drag & Drop or Click to Upload</h4>
+                            <p>Images: JPG, PNG, GIF (Max 50MB)</p>
+                            <p>Videos: MP4, MOV, AVI (Max 500MB)</p>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*,video/*">
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>File Information</h3>
+                    </div>
+                    <div class="file-info-card" id="fileInfoCard">
+                        <div class="file-header">
+                            <div class="file-name" id="fileName">No file selected</div>
+                            <div class="file-meta">
+                                <span id="fileSize">0 MB</span>
+                                <span id="fileType">Type</span>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Upload Progress</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                        <div id="fileStatus">Ready for analysis</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Analysis Options</h3>
+                    </div>
+                    <div class="options-grid">
+                        <div class="option-card active" data-mode="deepfake">
+                            <div class="option-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="option-title">Deepfake Detection</div>
+                            <div class="option-desc">Detect AI-generated manipulations</div>
+                        </div>
+                        <div class="option-card" data-mode="metadata">
+                            <div class="option-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="option-title">Metadata Analysis</div>
+                            <div class="option-desc">Examine file metadata and EXIF data</div>
+                        </div>
+                        <div class="option-card" data-mode="forensic">
+                            <div class="option-icon">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <div class="option-title">Forensic Analysis</div>
+                            <div class="option-desc">Detailed pixel-level examination</div>
+                        </div>
+                        <div class="option-card" data-mode="comparison">
+                            <div class="option-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="option-title">Comparison Study</div>
+                            <div class="option-desc">Compare with known authentic media</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-title">
+                        <i class="fas fa-paw"></i>
+                        <h3>Subject Type</h3>
+                    </div>
+                    <div class="options-grid">
+                        <div class="option-card active" data-type="human">
+                            <div class="option-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="option-title">Human</div>
+                        </div>
+                        <div class="option-card" data-type="animal">
+                            <div class="option-icon">
+                                <i class="fas fa-dog"></i>
+                            </div>
+                            <div class="option-title">Animal</div>
+                        </div>
+                        <div class="option-card" data-type="object">
+                            <div class="option-icon">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <div class="option-title">Object</div>
+                        </div>
+                        <div class="option-card" data-type="landscape">
+                            <div class="option-icon">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <div class="option-title">Landscape</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="analyze-btn" id="analyzeBtn">
+                    <i class="fas fa-search"></i>
+                    Analyze with OSCAR AI
+                </button>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <div class="chat-header-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chat-header-text">
+                        <h3>OSCAR AI Assistant</h3>
+                        <p>Ask me anything about deepfakes or analysis results</p>
+                    </div>
+                    <div class="chat-status">
+                        <div class="status-indicator"></div>
+                        <span>Connected to API</span>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea class="chat-input" id="userInput" 
+                                  placeholder="Ask OSCAR AI about deepfakes, analysis, or upload a file..."></textarea>
+                        <div class="input-actions">
+                            <button class="action-btn" id="attachBtn" title="Attach file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button class="action-btn" id="clearBtn" title="Clear chat">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="action-btn" id="helpBtn" title="Get help">
+                                <i class="fas fa-question"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - History -->
+            <div class="history-sidebar">
+                <div class="section-title">
+                    <i class="fas fa-history"></i>
+                    <h3>Analysis History</h3>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- History items will be added here dynamically -->
+                    <div class="history-placeholder">
+                        <p style="text-align: center; color: var(--medium-gray); padding: 20px;">
+                            No analysis history yet. Upload and analyze a file to see results here.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="#" class="footer-link">
+                    <i class="fas fa-book"></i> Documentation
+                </a>
+                <a href="#" class="footer-link">
+                    <i class="fas fa-shield-alt"></i> Privacy
+                </a>
+                <a href="#" class="footer-link">
+                    <i class="fas fa-code"></i> API
+                </a>
+                <a href="#" class="footer-link">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="#" class="footer-link">
+                    <i class="fas fa-github"></i> GitHub
+                </a>
+            </div>
+            <p>OSCAR AI &copy; 2023 | Advanced Deepfake Detection System | Powered by Machine Learning & NLP</p>
+            <p style="font-size: 12px; margin-top: 10px; opacity: 0.7;">
+                Version 2.1.0 | Model: OSCAR-CNN v3 | Last Updated: November 2023
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // Main Application JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let currentFileId = null;
+            let currentAnalysisId = null;
+            let chatHistory = [];
+            let analysisHistory = [];
+            let socket = null;
+            let uploadInProgress = false;
+
+            // DOM Elements
+            const elements = {
+                uploadArea: document.getElementById('uploadArea'),
+                fileInput: document.getElementById('fileInput'),
+                fileInfoCard: document.getElementById('fileInfoCard'),
+                fileName: document.getElementById('fileName'),
+                fileSize: document.getElementById('fileSize'),
+                fileType: document.getElementById('fileType'),
+                progressFill: document.getElementById('progressFill'),
+                progressPercent: document.getElementById('progressPercent'),
+                fileStatus: document.getElementById('fileStatus'),
+                analyzeBtn: document.getElementById('analyzeBtn'),
+                chatMessages: document.getElementById('chatMessages'),
+                userInput: document.getElementById('userInput'),
+                sendBtn: document.getElementById('sendBtn'),
+                attachBtn: document.getElementById('attachBtn'),
+                clearBtn: document.getElementById('clearBtn'),
+                helpBtn: document.getElementById('helpBtn'),
+                historyList: document.getElementById('historyList'),
+                analysesCount: document.getElementById('analysesCount'),
+                detectionRate: document.getElementById('detectionRate'),
+                responseTime: document.getElementById('responseTime')
+            };
+
+            // Initialize WebSocket connection
+            function initWebSocket() {
+                socket = io('http://localhost:5000');
+                
+                socket.on('connect', () => {
+                    console.log('Connected to WebSocket server');
+                    showToast('Connected to OSCAR AI server', 'success');
+                });
+                
+                socket.on('analysis_progress', (data) => {
+                    updateAnalysisProgress(data);
+                });
+                
+                socket.on('analysis_complete', (data) => {
+                    handleAnalysisComplete(data);
+                });
+                
+                socket.on('analysis_error', (data) => {
+                    handleAnalysisError(data);
+                });
+                
+                socket.on('disconnect', () => {
+                    console.log('Disconnected from WebSocket server');
+                    showToast('Disconnected from server. Reconnecting...', 'warning');
+                });
+            }
+
+            // Initialize the application
+            function initApp() {
+                // Initialize WebSocket
+                initWebSocket();
+                
+                // Load analysis history
+                loadAnalysisHistory();
+                
+                // Load system stats
+                loadSystemStats();
+                
+                // Add welcome message
+                setTimeout(() => {
+                    addMessage('ai', `Hello! I'm OSCAR AI, your advanced deepfake detection assistant. I can help you analyze images and videos for signs of AI manipulation, examine metadata, and provide detailed forensic reports. Upload a file to get started!`);
+                }, 500);
+                
+                // Setup event listeners
+                setupEventListeners();
+            }
+
+            // Setup event listeners
+            function setupEventListeners() {
+                // Upload area click
+                elements.uploadArea.addEventListener('click', () => {
+                    elements.fileInput.click();
+                });
+                
+                // File input change
+                elements.fileInput.addEventListener('change', handleFileSelect);
+                
+                // Drag and drop events
+                elements.uploadArea.addEventListener('dragover', handleDragOver);
+                elements.uploadArea.addEventListener('dragleave', handleDragLeave);
+                elements.uploadArea.addEventListener('drop', handleFileDrop);
+                
+                // Analyze button
+                elements.analyzeBtn.addEventListener('click', startAnalysis);
+                
+                // Send message button
+                elements.sendBtn.addEventListener('click', sendMessage);
+                
+                // Enter key in input
+                elements.userInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+                
+                // Attach button
+                elements.attachBtn.addEventListener('click', () => {
+                    elements.fileInput.click();
+                });
+                
+                // Clear chat button
+                elements.clearBtn.addEventListener('click', clearChat);
+                
+                // Help button
+                elements.helpBtn.addEventListener('click', showHelp);
+                
+                // Option cards selection
+                document.querySelectorAll('.option-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const parent = this.closest('.options-grid');
+                        parent.querySelectorAll('.option-card').forEach(c => {
+                            c.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    });
+                });
+                
+                // Auto-resize textarea
+                elements.userInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+
+            // Handle file selection
+            async function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                await uploadFile(file);
+            }
+
+            // Handle drag over
+            function handleDragOver(e) {
+                e.preventDefault();
+                elements.uploadArea.classList.add('dragover');
+            }
+
+            // Handle drag leave
+            function handleDragLeave(e) {
+                e.preventDefault();
+                elements.uploadArea.classList.remove('dragover');
+            }
+
+            // Handle file drop
+            async function handleFileDrop(e) {
+                e.preventDefault();
+                elements.uploadArea.classList.remove('dragover');
+                
+                const file = e.dataTransfer.files[0];
+                if (!file) return;
+                
+                await uploadFile(file);
+            }
+
+            // Upload file to server
+            async function uploadFile(file) {
+                if (uploadInProgress) {
+                    showToast('Upload already in progress', 'warning');
+                    return;
+                }
+                
+                // Validate file size
+                const maxSize = file.type.startsWith('video/') ? 500 * 1024 * 1024 : 50 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showToast(`File too large. Max size: ${maxSize / (1024 * 1024)}MB`, 'error');
+                    return;
+                }
+                
+                // Show file info
+                elements.fileInfoCard.classList.add('active');
+                elements.fileName.textContent = file.name;
+                elements.fileSize.textContent = formatFileSize(file.size);
+                elements.fileType.textContent = file.type.split('/')[0].toUpperCase();
+                elements.fileStatus.textContent = 'Preparing upload...';
+                
+                uploadInProgress = true;
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    // Show upload progress
+                    elements.progressFill.style.width = '0%';
+                    elements.progressPercent.textContent = '0%';
+                    
+                    // Simulate progress for better UX
+                    let progress = 0;
+                    const progressInterval = setInterval(() => {
+                        progress += 5;
+                        if (progress > 90) {
+                            clearInterval(progressInterval);
+                        }
+                        updateProgress(progress);
+                    }, 100);
+                    
+                    // Upload to server
+                    const response = await fetch('http://localhost:5000/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    clearInterval(progressInterval);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Upload failed: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        // Update progress to 100%
+                        updateProgress(100);
+                        elements.fileStatus.textContent = 'Upload complete! Ready for analysis.';
+                        
+                        // Store file ID
+                        currentFileId = data.file_id;
+                        
+                        // Add message to chat
+                        addMessage('user', `Uploaded file: ${file.name}`);
+                        setTimeout(() => {
+                            addMessage('ai', `I've received "${file.name}". I can analyze it for deepfake indicators using multiple detection methods. Select your analysis options and click "Analyze with OSCAR AI" to begin.`);
+                        }, 500);
+                        
+                        showToast('File uploaded successfully', 'success');
+                    } else {
+                        throw new Error(data.error || 'Upload failed');
+                    }
+                    
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    elements.fileStatus.textContent = 'Upload failed';
+                    elements.progressFill.style.background = 'var(--accent-red)';
+                    showToast(`Upload failed: ${error.message}`, 'error');
+                } finally {
+                    uploadInProgress = false;
+                }
+            }
+
+            // Update progress bar
+            function updateProgress(percent) {
+                elements.progressFill.style.width = `${percent}%`;
+                elements.progressPercent.textContent = `${percent}%`;
+            }
+
+            // Start analysis
+            async function startAnalysis() {
+                if (!currentFileId) {
+                    showToast('Please upload a file first', 'warning');
+                    return;
+                }
+                
+                // Get selected options
+                const detectionMode = document.querySelector('.options-grid:nth-child(2) .option-card.active').dataset.mode;
+                const subjectType = document.querySelector('.options-grid:nth-child(4) .option-card.active').dataset.type;
+                
+                // Disable analyze button
+                elements.analyzeBtn.disabled = true;
+                elements.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+                
+                // Add analysis request message
+                addMessage('user', `Analyze this ${subjectType} file for ${detectionMode} indicators.`);
+                
+                try {
+                    const response = await fetch('http://localhost:5000/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            file_id: currentFileId,
+                            analysis_type: detectionMode,
+                            subject_type: subjectType
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Analysis failed: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'analysis_started') {
+                        currentAnalysisId = data.analysis_id;
+                        showToast('Analysis started. Results will appear shortly...', 'info');
+                    } else {
+                        throw new Error(data.error || 'Analysis failed');
+                    }
+                    
+                } catch (error) {
+                    console.error('Analysis error:', error);
+                    elements.analyzeBtn.disabled = false;
+                    elements.analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Analyze with OSCAR AI';
+                    showToast(`Analysis failed: ${error.message}`, 'error');
+                }
+            }
+
+            // Update analysis progress
+            function updateAnalysisProgress(data) {
+                if (data.file_id === currentFileId) {
+                    // Update progress in UI
+                    const progressMsg = `Analysis: ${data.message} (${data.progress}%)`;
+                    
+                    // Update or create progress message
+                    let progressElement = document.getElementById('analysisProgress');
+                    if (!progressElement) {
+                        progressElement = document.createElement('div');
+                        progressElement.id = 'analysisProgress';
+                        progressElement.className = 'message ai';
+                        progressElement.innerHTML = `
+                            <div class="message-header">
+                                <i class="fas fa-robot"></i>
+                                <strong>OSCAR AI</strong>
+                            </div>
+                            <div class="message-content">
+                                ${progressMsg}
+                                <div class="progress-bar" style="margin-top: 10px;">
+                                    <div class="progress-fill" style="width: ${data.progress}%"></div>
+                                </div>
+                            </div>
+                        `;
+                        elements.chatMessages.appendChild(progressElement);
+                    } else {
+                        const content = progressElement.querySelector('.message-content');
+                        content.innerHTML = `
+                            ${progressMsg}
+                            <div class="progress-bar" style="margin-top: 10px;">
+                                <div class="progress-fill" style="width: ${data.progress}%"></div>
+                            </div>
+                        `;
+                    }
+                    
+                    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                }
+            }
+
+            // Handle analysis completion
+            function handleAnalysisComplete(data) {
+                if (data.file_id === currentFileId) {
+                    // Remove progress message
+                    const progressElement = document.getElementById('analysisProgress');
+                    if (progressElement) {
+                        progressElement.remove();
+                    }
+                    
+                    // Reset analyze button
+                    elements.analyzeBtn.disabled = false;
+                    elements.analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Analyze with OSCAR AI';
+                    
+                    // Display analysis results
+                    displayAnalysisResults(data.results);
+                    
+                    // Add to history
+                    addToHistory(data);
+                    
+                    // Update stats
+                    updateStats();
+                    
+                    showToast('Analysis completed successfully', 'success');
+                }
+            }
+
+            // Handle analysis error
+            function handleAnalysisError(data) {
+                if (data.file_id === currentFileId) {
+                    // Remove progress message
+                    const progressElement = document.getElementById('analysisProgress');
+                    if (progressElement) {
+                        progressElement.remove();
+                    }
+                    
+                    // Reset analyze button
+                    elements.analyzeBtn.disabled = false;
+                    elements.analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Analyze with OSCAR AI';
+                    
+                    // Show error message
+                    addMessage('ai', `Analysis failed: ${data.error}`);
+                    
+                    showToast('Analysis failed', 'error');
+                }
+            }
+
+            // Display analysis results
+            function displayAnalysisResults(results) {
+                // Determine confidence level
+                const confidence = results.overview.confidence_score;
+                let confidenceLevel, confidenceClass;
+                
+                if (confidence >= 85) {
+                    confidenceLevel = 'HIGH';
+                    confidenceClass = 'confidence-high';
+                } else if (confidence >= 70) {
+                    confidenceLevel = 'MEDIUM';
+                    confidenceClass = 'confidence-medium';
+                } else {
+                    confidenceLevel = 'LOW';
+                    confidenceClass = 'confidence-low';
+                }
+                
+                // Create results message
+                const resultsHTML = `
+                    <div class="message ai">
+                        <div class="message-header">
+                            <i class="fas fa-robot"></i>
+                            <strong>OSCAR AI</strong>
+                            <span class="message-time">${new Date().toLocaleTimeString()}</span>
+                        </div>
+                        <div class="message-content">
+                            <p>Analysis complete! Here are the results:</p>
+                            
+                            <div class="analysis-result">
+                                <div class="result-header">
+                                    <div class="result-title">
+                                        <i class="fas fa-chart-bar"></i>
+                                        Deepfake Analysis Result
+                                    </div>
+                                    <div class="confidence-badge ${confidenceClass}">
+                                        <i class="fas fa-shield-alt"></i>
+                                        ${confidenceLevel} - ${confidence.toFixed(1)}% Confidence
+                                    </div>
+                                </div>
+                                
+                                <div class="result-metrics">
+                                    <div class="metric-card">
+                                        <div class="metric-value">${results.overview.confidence_score.toFixed(1)}%</div>
+                                        <div class="metric-label">Confidence Score</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value">${results.detailed_findings.inconsistency_score?.toFixed(1) || 'N/A'}/10</div>
+                                        <div class="metric-label">Inconsistency</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value">${results.detailed_findings.anomalies?.length || 0}</div>
+                                        <div class="metric-label">Anomalies Found</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value">${results.technical_details.detection_methods?.length || 5}</div>
+                                        <div class="metric-label">Methods Used</div>
+                                    </div>
+                                </div>
+                                
+                                ${results.detailed_findings.anomalies && results.detailed_findings.anomalies.length > 0 ? `
+                                <div class="findings-list">
+                                    <div class="findings-title">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Key Findings
+                                    </div>
+                                    ${results.detailed_findings.anomalies.slice(0, 5).map(finding => `
+                                        <div class="finding-item">
+                                            <i class="fas fa-circle"></i>
+                                            <span>${finding}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ` : ''}
+                                
+                                ${results.overview.recommendations && results.overview.recommendations.length > 0 ? `
+                                <div class="findings-list" style="border-left-color: var(--accent-green);">
+                                    <div class="findings-title">
+                                        <i class="fas fa-lightbulb"></i>
+                                        Recommendations
+                                    </div>
+                                    ${results.overview.recommendations.slice(0, 3).map(rec => `
+                                        <div class="finding-item" style="border-left-color: var(--accent-green);">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>${rec}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ` : ''}
+                                
+                                <div class="visualization-area">
+                                    <div class="viz-title">
+                                        <i class="fas fa-image"></i>
+                                        Analysis Visualizations
+                                    </div>
+                                    <div class="viz-placeholder">
+                                        <i class="fas fa-chart-line" style="font-size: 40px; margin-bottom: 10px;"></i>
+                                        <p>Heatmaps and visual analysis available</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p style="margin-top: 15px; font-size: 14px; color: var(--medium-gray);">
+                                <i class="fas fa-info-circle"></i>
+                                Analysis completed at ${new Date().toLocaleTimeString()}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add results to chat
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = resultsHTML;
+                elements.chatMessages.appendChild(tempDiv.firstElementChild);
+                
+                // Scroll to bottom
+                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                
+                // Add follow-up message
+                setTimeout(() => {
+                    addMessage('ai', 'Would you like me to explain any of these findings in more detail, or do you have other questions about the analysis?');
+                }, 1000);
+            }
+
+            // Add message to chat
+            function addMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                messageDiv.innerHTML = `
+                    <div class="message-header">
+                        <i class="fas fa-${sender === 'ai' ? 'robot' : 'user'}"></i>
+                        <strong>${sender === 'ai' ? 'OSCAR AI' : 'You'}</strong>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-content">
+                        ${text}
+                    </div>
+                `;
+                
+                elements.chatMessages.appendChild(messageDiv);
+                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                
+                // Add to chat history
+                chatHistory.push({
+                    sender: sender,
+                    text: text,
+                    time: time
+                });
+            }
+
+            // Send message to chatbot
+            async function sendMessage() {
+                const text = elements.userInput.value.trim();
+                if (!text) return;
+                
+                // Add user message
+                addMessage('user', text);
+                
+                // Clear input
+                elements.userInput.value = '';
+                elements.userInput.style.height = 'auto';
+                
+                // Disable input while processing
+                elements.userInput.disabled = true;
+                elements.sendBtn.disabled = true;
+                
+                try {
+                    // Send to backend for processing
+                    const response = await fetch('http://localhost:5000/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: text,
+                            context: {
+                                current_file: currentFileId,
+                                analysis_type: document.querySelector('.options-grid:nth-child(2) .option-card.active')?.dataset.mode || 'deepfake'
+                            },
+                            history: chatHistory.slice(-10) // Last 10 messages
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Chat failed: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        // Add AI response
+                        addMessage('ai', data.response);
+                    } else {
+                        throw new Error(data.error || 'Chat failed');
+                    }
+                    
+                } catch (error) {
+                    console.error('Chat error:', error);
+                    addMessage('ai', `I apologize, but I encountered an error: ${error.message}`);
+                } finally {
+                    // Re-enable input
+                    elements.userInput.disabled = false;
+                    elements.sendBtn.disabled = false;
+                    elements.userInput.focus();
+                }
+            }
+
+            // Load analysis history
+            async function loadAnalysisHistory() {
+                try {
+                    const response = await fetch('http://localhost:5000/history');
+                    if (response.ok) {
+                        const data = await response.json();
+                        analysisHistory = data.history || [];
+                        updateHistoryDisplay();
+                    }
+                } catch (error) {
+                    console.error('Error loading history:', error);
+                }
+            }
+
+            // Add to history
+            function addToHistory(data) {
+                const historyItem = {
+                    id: data.file_id,
+                    timestamp: data.timestamp,
+                    confidence: data.results.overview.confidence_score,
+                    likelihood: data.results.overview.deepfake_likelihood,
+                    summary: data.results.overview.summary
+                };
+                
+                analysisHistory.unshift(historyItem);
+                if (analysisHistory.length > 50) {
+                    analysisHistory = analysisHistory.slice(0, 50);
+                }
+                
+                updateHistoryDisplay();
+            }
+
+            // Update history display
+            function updateHistoryDisplay() {
+                elements.historyList.innerHTML = '';
+                
+                if (analysisHistory.length === 0) {
+                    elements.historyList.innerHTML = `
+                        <div class="history-placeholder">
+                            <p style="text-align: center; color: var(--medium-gray); padding: 20px;">
+                                No analysis history yet. Upload and analyze a file to see results here.
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                analysisHistory.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.dataset.id = item.id;
+                    
+                    const time = new Date(item.timestamp).toLocaleString([], {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    // Determine confidence color
+                    let confidenceClass = 'confidence-low';
+                    if (item.confidence >= 85) confidenceClass = 'confidence-high';
+                    else if (item.confidence >= 70) confidenceClass = 'confidence-medium';
+                    
+                    historyItem.innerHTML = `
+                        <div class="history-time">${time}</div>
+                        <div class="history-title">
+                            <span>Analysis #${item.id.substring(0, 8)}</span>
+                            <span class="history-confidence ${confidenceClass}">${item.confidence.toFixed(1)}%</span>
+                        </div>
+                        <div class="history-preview">${item.likelihood || item.summary?.substring(0, 50) || 'No preview available'}</div>
+                    `;
+                    
+                    // Add click event
+                    historyItem.addEventListener('click', () => {
+                        // Load this analysis (in a real app, you would fetch full results)
+                        showToast('Loading analysis details...', 'info');
+                    });
+                    
+                    elements.historyList.appendChild(historyItem);
+                });
+            }
+
+            // Load system stats
+            async function loadSystemStats() {
+                try {
+                    const response = await fetch('http://localhost:5000/stats');
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            const stats = data.stats;
+                            elements.analysesCount.textContent = stats.total_analyses || '0';
+                            elements.detectionRate.textContent = '92.5%'; // Mock accuracy
+                            elements.responseTime.textContent = '45ms'; // Mock response time
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                }
+            }
+
+            // Update stats
+            function updateStats() {
+                const currentCount = parseInt(elements.analysesCount.textContent) || 0;
+                elements.analysesCount.textContent = currentCount + 1;
+                
+                // Simulate slight accuracy improvement
+                const currentRate = parseFloat(elements.detectionRate.textContent) || 92.5;
+                elements.detectionRate.textContent = (currentRate + 0.1).toFixed(1) + '%';
+            }
+
+            // Clear chat
+            function clearChat() {
+                if (confirm('Are you sure you want to clear the chat history?')) {
+                    elements.chatMessages.innerHTML = '';
+                    chatHistory = [];
+                    
+                    // Add new welcome message
+                    setTimeout(() => {
+                        addMessage('ai', 'Chat cleared! How can I help you with deepfake detection today?');
+                    }, 300);
+                    
+                    showToast('Chat cleared', 'info');
+                }
+            }
+
+            // Show help
+            function showHelp() {
+                addMessage('ai', `Here's what I can help you with:
+                
+1. **Upload media** - Drag & drop or click the upload area to analyze images/videos
+2. **Deepfake detection** - I'll analyze for AI manipulation indicators
+3. **Metadata analysis** - Examine EXIF data and file properties
+4. **Forensic analysis** - Detailed pixel-level examination
+5. **Comparison study** - Compare with known authentic media
+6. **Ask questions** - Inquire about deepfake technology, detection methods, or analysis results
+
+Try uploading a file and selecting analysis options to get started!`);
+            }
+
+            // Show toast notification
+            function showToast(message, type = 'info') {
+                const backgroundColor = {
+                    success: 'var(--accent-green)',
+                    error: 'var(--accent-red)',
+                    warning: 'var(--accent-orange)',
+                    info: 'var(--primary-blue)'
+                }[type];
+                
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: backgroundColor,
+                    stopOnFocus: true
+                }).showToast();
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Initialize the app
+            initApp();
+        });
+    </script>
+</body>
+</html>
