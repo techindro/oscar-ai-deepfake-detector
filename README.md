@@ -20,19 +20,20 @@ A full-stack deepfake detection system combining machine learning, NLP, and real
    ```bash
    cd backend
 
-# Create a virtual environment:
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Create a virtual environment
+python -m venv venv:
+source venv/bin/activate  
+On Windows: venv\Scripts\activate
 
 #Install dependencies:
 pip install -r requirements.txt
 
-#Set up OpenAI API key
-export OPENAI_API_KEY="your-api-key-here"
+#Set up OpenAI API key:
+"export OPENAI_API_KEY="your-api-key-here"
 #On Windows: set OPENAI_API_KEY=your-api-key-here
 
 # Run the backend server:
-python app.py
+"python app.py
 Server will start at: http://localhost:5000
 
 
