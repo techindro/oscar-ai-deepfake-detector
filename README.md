@@ -28,24 +28,24 @@ Mac/Linux: source venv/bin/activate
 python app.py
 
 # Features
-Upload images and videos for analysis
-Multiple detection methods (Deepfake, Metadata, Forensic, Comparison)
-Real-time progress updates
-Chat with AI assistant about results
-History of past analyses
+Upload images and videos for analysis.
+Multiple detection methods (Deepfake, Metadata, Forensic, Comparison).
+Real-time progress updates.
+Chat with AI assistant about results.
+History of past analyses.
 
 # Usage
-Upload file using drag & drop or click
-Select analysis type and subject
-Click "Analyze with OSCAR AI"
-View results and chat with AI
+Upload file using drag & drop or click.
+Select analysis type and subject.
+Click "Analyze with OSCAR AI".
+View results and chat with AI.
 
-# API Endpoints
-POST /upload - Upload file
-POST /analyze - Start analysis
-POST /chat - Chat with AI
-GET /history - Get analysis history
-GET /stats - Get system statistics
+API Endpoints
+POST /upload - Upload file.
+POST /analyze - Start analysis;
+POST /chat - Chat with AI.
+GET /history - Get analysis history.
+GET /stats - Get system statistics.
 
 # Requirements
 Backend requires:
@@ -58,3 +58,13 @@ MediaPipe
 # License
 MIT License
 
+Copyright (c) 2023 OSCAR AI Contributors
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
