@@ -14,19 +14,18 @@ Node.js 16+ (optional, for frontend)
 2GB+ free disk space
 
 # Clone and setup
-git clone https://github.com/tech.indro/oscar-ai.git
+'''git clone https://github.com/tech.indro/oscar-ai.git
 cd oscar-ai/backend
 
-# Create virtual environment
+# Create virtual environment:
 python -m venv venv
 
-# Activate virtual environment
-# On Windows:
 venv\Scripts\activate
+
 # On macOS/Linux:
 source venv/bin/activate
 
-# Install dependencies
+# Install dependencies:
 pip install -r requirements.txt
 
 # Run backend server
