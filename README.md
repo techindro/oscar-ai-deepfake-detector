@@ -1,6 +1,6 @@
 # OSCAR AI - Advanced Deepfake Detection System
 <div align="center">
-<img src =" https://img.shields.io/badge/OSCAR_AI-Deepfake_Detection-blue?style=for-the-badge&logo=ai&logoColor=white>
+<img src =" https://img.shields.io/badge/OSCAR_AI-Deepfake_Detection-blue?style=for-the-badge&logo=ai&logoColor=white target ="blank">
  </div>
 # Overview
 OSCAR AI is a comprehensive, production-ready deepfake detection system that combines state-of-the-art machine learning models with natural language processing to identify manipulated media. Featuring a Labrador-themed interface, the system provides real-time analysis, detailed forensic reports, and an interactive AI chatbot for explaining detection results.
