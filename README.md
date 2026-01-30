@@ -1,41 +1,36 @@
 # OSCAR AI - Advanced Deepfake Detection System
 
-A full-stack deepfake detection system combining machine learning, NLP, and real-time analysis capabilitie
+https://img.shields.io/badge/OSCAR_AI-Deepfake_Detection-blue?style=for-the-badge&logo=ai&logoColor=white
+https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python&logoColor=white
+https://img.shields.io/badge/Flask-2.3+-black?style=for-the-badge&logo=flask&logoColor=white
+https://img.shields.io/badge/Machine_Learning-TensorFlow-orange?style=for-the-badge&logo=tensorflow&logoColor=white
+https://img.shields.io/badge/License-MIT-green?style=for-the-badge
 
-## Features
+# Overview
+OSCAR AI is a comprehensive, production-ready deepfake detection system that combines state-of-the-art machine learning models with natural language processing to identify manipulated media. Featuring a Labrador-themed interface, the system provides real-time analysis, detailed forensic reports, and an interactive AI chatbot for explaining detection results.
 
-- **Multi-format Support**: Analyze images (JPG, PNG) and videos (MP4, MOV, AVI)
-- **Advanced Detection**: Multiple detection methods (ELA, facial analysis, metadata forensics)
-- **Real-time Analysis**: WebSocket-based progress updates
-- **NLP Chatbot**: Intelligent responses about deepfake technology
-- **Comprehensive Reports**: Detailed analysis with confidence scores
-- **Visualizations**: Heatmaps and forensic visualizations
-- **History Tracking**: Save and review past analyses
+ # Quick Start
+Prerequisites
+Python 3.9+
+Node.js 16+ (optional, for frontend)
+4GB+ RAM
+2GB+ free disk space
 
-## Installation
+# Clone and setup
+git clone https://github.com/tech.indro/oscar-ai.git
+cd oscar-ai/backend
 
-### Backend Setup
+# Create virtual environment
+python -m venv venv
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
 
-# Create a virtual environment
-```python -m venv venv:
-source venv/bin/activate  
-On Windows: venv\Scripts\activate
-
-Install dependencies:
+# Install dependencies
 pip install -r requirements.txt
 
-Set up OpenAI API key:
-```export OPENAI_API_KEY="your-api-key-here"
-On Windows: set OPENAI_API_KEY=your-api-key-here
-
-# Run the backend server:
- python app.py
-Server will start at: http://localhost:5000
-
-
-
-
+# Run backend server
+python app.py
