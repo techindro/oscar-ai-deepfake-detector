@@ -21,3 +21,35 @@ This repository is open for developers, learners, and contributors worldwide.
 ---
 
 ## 📂 Project Structure
+
+├── src/
+├── docs/
+├── tests/
+├── README.md
+└── LICENSE
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Git
+- Required runtime installed
+
+### Installation
+```bash
+git clone https://github.com/your-username/oscar-ai.git
+cd oscar-ai
+
+🤝 Contributing
+
+Contributions are welcome!
+Fork the repository, create a new branch, and submit a pull request.
+
+📜 License
+
+MIT License
+
+Copyright (c) 2023 OSCAR AI Contributors
+
+
