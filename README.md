@@ -1,4 +1,4 @@
-# OSCAR AI 🤖
+# OSCAR AI Deepfake Detector 🤖
 
 OSCAR AI is an open-source AI project designed to build, experiment, and deploy intelligent solutions.This repository is open for developers, learners, and contributors worldwide. an open-source initiative focused on building smart, scalable, and ethical AI solutions.The goal of OSCAR AI is to provide a flexible platform for experimentation, research, and real-world AI applications while encouraging community collaboration. OSCAR AI is designed for developers, students, and researchers who want to explore artificial intelligence, machine learning, and automation in a practical way.
 
