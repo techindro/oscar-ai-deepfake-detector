@@ -9,7 +9,6 @@ OSCAR AI is an open-source AI project designed to build, experiment, and deploy 
 - Easy to customize and extend
 - Community-driven development
 - MIT Licensed
-
 ---
 
 ## 🛠 Tech Stack
