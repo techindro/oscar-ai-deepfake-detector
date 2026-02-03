@@ -29,7 +29,7 @@ OSCAR AI is an open-source AI project designed to build, experiment, and deploy 
 
 ### Installation
 ```bash
-git clone https://github.com/your-username/oscar-ai.git
+git clone https://github.com/techindro/oscar-ai.git
 cd oscar-ai
 
 🤝 Contributing
